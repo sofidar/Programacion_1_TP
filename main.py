@@ -1,55 +1,54 @@
 import random
 import validaciones
 
-libros = []
-usuarios = []
+# Funciones para usuarios
 
-#Funciones usuarios
-
-def añadir_usuario():
-    codigo_usuario = random.randint(10, 99) 
+def añadir_usuario(usuarios_codigos, usuarios_nombres):
+    codigo_usuario = random.randint(10, 99)
     nombre_usuario = input("Ingrese el nombre del usuario: ")
 
-    for usuario in usuarios:
-        if usuario[0] == codigo_usuario:
-            print("El código generado",codigo_usuario,"ya existe, generando un nuevo código...")
-            codigo_usuario = random.randint(10, 99)  
+    while codigo_usuario in usuarios_codigos:
+        print(f"El codigo {codigo_usuario} ya existe, generando un nuevo código...")
+        codigo_usuario = random.randint(10, 99)
 
-    usuarios.append([codigo_usuario, nombre_usuario])
-    print("Usuario",nombre_usuario,"añadido con código",codigo_usuario)
-
-
-def modificar_usuario():
-    codigo_usuario = int(input("Ingrese el código del usuario a modificar: "))
-    nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
-    for usuario in usuarios:
-        if usuario[0] == codigo_usuario:
-            usuario[1] = nuevo_nombre
-            print("Usuario con código",codigo_usuario,"modificado a",nuevo_nombre)
-            return
-    print("Usuario con código",codigo_usuario,"no encontrado.")
-
-def eliminar_usuario():
-    codigo_usuario = int(input("Ingrese el código del usuario a eliminar: "))
-    for usuario in usuarios:
-        if usuario[0] == codigo_usuario:
-            usuarios.remove(usuario)
-            print("Usuario con código",codigo_usuario,"eliminado.")
-            return
-    print("Usuario con código",codigo_usuario,"no encontrado.")
+    usuarios_codigos.append(codigo_usuario)
+    usuarios_nombres.append(nombre_usuario)
+    print(f"Usuario {nombre_usuario} añadido con codigo {codigo_usuario}")
 
 
-#Funciones para libros
+def modificar_usuario(usuarios_codigos, usuarios_nombres):
+    codigo_usuario = int(input("Ingrese el codigo del usuario a modificar: "))
+    if codigo_usuario in usuarios_codigos:
+        nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+        indice = usuarios_codigos.index(codigo_usuario)
+        usuarios_nombres[indice] = nuevo_nombre
+        print(f"Usuario con codigo {codigo_usuario} modificado a {nuevo_nombre}")
+    else:
+        print(f"Usuario con codigo {codigo_usuario} no encontrado.")
 
-def añadir_libro():
+
+def eliminar_usuario(usuarios_codigos, usuarios_nombres):
+    codigo_usuario = int(input("Ingrese el codigo del usuario a eliminar: "))
+    if codigo_usuario in usuarios_codigos:
+        indice = usuarios_codigos.index(codigo_usuario)
+        usuarios_codigos.pop(indice)
+        usuarios_nombres.pop(indice)
+        print(f"Usuario con codigo {codigo_usuario} eliminado.")
+    else:
+        print(f"Usuario con codigo {codigo_usuario} no encontrado.")
+
+
+# Funciones para libros
+
+def añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
     num_valido = False
     while not num_valido:
-        codigo_libro = input("Ingrese el código del libro: ")
+        codigo_libro = input("Ingrese el codigo del libro: ")
         if validaciones.es_entero(codigo_libro):
             codigo_libro = int(codigo_libro)
             num_valido = True
         else:
-            print("El código ingresado es incorrecto, intente nuevamente.")
+            print("El codigo ingresado es incorrecto, intente nuevamente.")
 
     nombre_libro = input("Ingrese el nombre del libro: ")
 
@@ -60,53 +59,68 @@ def añadir_libro():
             cantidad = int(cantidad)
             cantidad_valida = True
         else:
-            print("Cantidad no válida, por favor ingrese un número entero positivo.")
+            print("Cantidad no valida, ingrese un número entero positivo.")
 
-    # Verificar si el libro ya existe
-    for libro in libros:
-        if libro[0] == codigo_libro:
-            print("Libro con código", codigo_libro, "ya existe.")
-            return
+    precio_valido = False
+    while not precio_valido:
+        precio = input("Ingrese el precio del libro: ")
+        if validaciones.es_entero(precio):
+            precio = int(precio)
+            precio_valido = True
+        else:
+            print("Precio no valido, ingrese un número entero positivo.")
 
-    libros.append([codigo_libro, nombre_libro, cantidad])
-    print("Libro", nombre_libro, "añadido.")
+    if codigo_libro in libros_codigos:
+        print(f"Libro con codigo {codigo_libro} ya existe.")
+        return
+
+    libros_codigos.append(codigo_libro)
+    libros_nombres.append(nombre_libro)
+    libros_cantidades.append(cantidad)
+    libros_precios.append(precio)
+    print(f"Libro {nombre_libro} añadido.")
 
 
-def modificar_libro():
-    codigo_libro = int(input("Ingrese el código del libro a modificar: "))
-    nuevo_nombre = input("Ingrese el nuevo nombre del libro: ")
-    nueva_cantidad = int(input("Ingrese la nueva cantidad de libros: "))
-    for libro in libros:
-        if libro[0] == codigo_libro:
-            libro[1] = nuevo_nombre
-            libro[2] = nueva_cantidad
-            print("Libro con código",codigo_libro,"modificado a",nuevo_nombre,"con cantidad",nueva_cantidad)
-            return
-    print("Libro con código",codigo_libro,"no encontrado.")
+def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
+    codigo_libro = int(input("Ingrese el codigo del libro a modificar: "))
+    if codigo_libro in libros_codigos:
+        indice = libros_codigos.index(codigo_libro)
+        nuevo_nombre = input("Ingrese el nuevo nombre del libro: ")
+        nueva_cantidad = int(input("Ingrese la nueva cantidad de libros: "))
+        nuevo_precio = int(input("Ingrese el nuevo precio del libro: "))
+        libros_nombres[indice] = nuevo_nombre
+        libros_cantidades[indice] = nueva_cantidad
+        libros_precios[indice] = nuevo_precio
+        print(f"Libro con codigo {codigo_libro} modificado a {nuevo_nombre} con cantidad {nueva_cantidad} y precio {nuevo_precio}")
+    else:
+        print(f"Libro con codigo {codigo_libro} no encontrado.")
 
-def eliminar_libro():
-    codigo_libro = int(input("Ingrese el código del libro a eliminar: "))
-    for libro in libros:
-        if libro[0] == codigo_libro:
-            libros.remove(libro)
-            print("Libro con código",codigo_libro,"eliminado.")
-            return
-    print("Libro con código",codigo_libro,"no encontrado.")
 
-def mostrar_libros():
-    matriz = []
-    for f in range(len(libros)):
-        fila = []  
-        fila.append(libros[f][0])  
-        fila.append(libros[f][1])  
-        fila.append(libros[f][2])  
-        matriz.append(fila)  
+def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
+    codigo_libro = int(input("Ingrese el codigo del libro a eliminar: "))
+    if codigo_libro in libros_codigos:
+        indice = libros_codigos.index(codigo_libro)
+        libros_codigos.pop(indice)
+        libros_nombres.pop(indice)
+        libros_cantidades.pop(indice)
+        libros_precios.pop(indice)
+        print(f"Libro con codigo {codigo_libro} eliminado.")
+    else:
+        print(f"Libro con codigo {codigo_libro} no encontrado.")
+
+
+def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
+    matriz_libros = []
+    for i in range(len(libros_codigos)):
+        fila = [libros_codigos[i], libros_cantidades[i], libros_precios[i]]
+        matriz_libros.append(fila)
+
     print("\n--- Matriz de Libros ---")
-    for fila in matriz:
-        print(fila)  
+    for fila in matriz_libros:
+        print(fila)
 
 
-#Menu
+# Menú
 def mostrar_menu():
     print("\n--- Menú Biblioteca ---")
     print("1. Añadir usuario")
@@ -119,36 +133,51 @@ def mostrar_menu():
     print("8. Ver libros")
     print("9. Salir")
 
-def ejecutar_opcion(opcion):
-    opcion = int(opcion)  # Convertir a entero después de validar
+
+def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios):
     if opcion == 1:
-        añadir_usuario()
+        añadir_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 2:
-        modificar_usuario()
+        modificar_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 3:
-        eliminar_usuario()
+        eliminar_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 4:
-        añadir_libro()
+        añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
     elif opcion == 5:
-        modificar_libro()
+        modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
     elif opcion == 6:
-        eliminar_libro()
+        eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
     elif opcion == 7:
-        print("\nUsuarios:", usuarios)
+        print("\nUsuarios:")
+        for i in range(len(usuarios_codigos)):
+            print(f"Codigo: {usuarios_codigos[i]}, Nombre: {usuarios_nombres[i]}")
     elif opcion == 8:
-        mostrar_libros()
+        mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
         print("Programa finalizado")
         return False  # Indica que el programa debe terminar
     return True  # Indica que el bucle debe continuar
 
-# Programa principal
-if __name__ == "__main__":
+
+# Función principal
+def main():
+    usuarios_codigos = []
+    usuarios_nombres = []
+    libros_codigos = []
+    libros_nombres = []
+    libros_cantidades = []
+    libros_precios = []
+
     continuar = True
     while continuar:
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
         if validaciones.opcion_valida_menu(opcion):
-            continuar = ejecutar_opcion(opcion)
+            continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios)
         else:
-            print("Entrada no válida, por favor ingrese un número entero del 1 al 9.")
+            print("Entrada no valida, por favor ingrese un numero entero del 1 al 9.")
+
+
+if __name__ == "__main__":
+    main()
+
