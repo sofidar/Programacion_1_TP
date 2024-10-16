@@ -1,6 +1,7 @@
 import random
 import validaciones
 
+
 # Funciones para usuarios
 
 def añadir_usuario(usuarios_codigos, usuarios_nombres):
@@ -118,9 +119,25 @@ def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
     print("\n--- Matriz de Libros ---")
     for fila in matriz_libros:
         print(fila)
+        
+        
+#Funciones para archivos
+
+def generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios):
+    try:
+        archivo_libros = open("libros.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(libros_codigos)):
+            archivo_libros.write(str(libros_codigos[elemento])+";"+str(libros_cantidades[elemento])+";"+str(libros_precios[elemento])+"\n")
+        archivo_libros.close()
+    
+    return
 
 
 # Menú
+
 def mostrar_menu():
     print("\n--- Menú Biblioteca ---")
     print("1. Añadir usuario")
@@ -157,24 +174,14 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 9:
         reservar_libros()
     elif opcion == 10:
-        GenerarArchivoLibros(libros_codigos, libros_cantidades, libros_precios)
+        generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         print("Programa finalizado")
         return False  # Indica que el programa debe terminar
     return True  # Indica que el bucle debe continuar
 
-def GenerarArchivoLibros(libros_codigos, libros_cantidades, libros_precios):
-    try:
-        archivo_libros = open("libros.csv", mode='wt')
-    except IOError:
-        print("No se pudo crear el archivo")
-    else:
-        for elemento in range (len(libros_codigos)):
-            archivo_libros.write(str(libros_codigos[elemento])+";"+str(libros_cantidades[elemento])+";"+str(libros_precios[elemento])+"\n")
-        archivo_libros.close()
-    
-    return
 
 # Función principal
+
 def main():
     usuarios_codigos = []
     usuarios_nombres = []
