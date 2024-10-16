@@ -131,7 +131,8 @@ def mostrar_menu():
     print("6. Eliminar libro")
     print("7. Ver usuarios")
     print("8. Ver libros")
-    print("9. Salir")
+    print("9. Hacer una reserva")
+    print("10. Salir")
 
 
 def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios):
@@ -154,10 +155,24 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
+        reservar_libros()
+    elif opcion == 10:
+        GenerarArchivoLibros(libros_codigos, libros_cantidades, libros_precios)
         print("Programa finalizado")
         return False  # Indica que el programa debe terminar
     return True  # Indica que el bucle debe continuar
 
+def GenerarArchivoLibros(libros_codigos, libros_cantidades, libros_precios):
+    try:
+        archivo_libros = open("libros.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(libros_codigos)):
+            archivo_libros.write(str(libros_codigos[elemento])+";"+str(libros_cantidades[elemento])+";"+str(libros_precios[elemento])+"\n")
+        archivo_libros.close()
+    
+    return
 
 # Función principal
 def main():
@@ -175,9 +190,8 @@ def main():
         if validaciones.opcion_valida_menu(opcion):
             continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios)
         else:
-            print("Entrada no valida, por favor ingrese un numero entero del 1 al 9.")
+            print("Entrada no valida, por favor ingrese un numero entero del 1 al 10.")
 
 
 if __name__ == "__main__":
     main()
-
