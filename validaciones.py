@@ -3,3 +3,9 @@ def es_entero(valor):
 
 def opcion_valida_menu(opcion):
     return opcion.isdigit() and 1 <= int(opcion) <= 9
+
+def cadena_vacia(cadena):
+    if len(cadena) == 0:
+        return True
+    else:
+        return False
