@@ -7,6 +7,9 @@ import validaciones
 def añadir_usuario(usuarios_codigos, usuarios_nombres):
     codigo_usuario = random.randint(10, 99)
     nombre_usuario = input("Ingrese el nombre del usuario: ")
+    while not nombre_usuario.isalpha():
+        print("Solo se pueden ingresar letras")
+        nombre_usuario = input("Ingrese el nombre del usuario: ")
 
     while codigo_usuario in usuarios_codigos:
         print(f"El codigo {codigo_usuario} ya existe, generando un nuevo código...")
@@ -18,9 +21,18 @@ def añadir_usuario(usuarios_codigos, usuarios_nombres):
 
 
 def modificar_usuario(usuarios_codigos, usuarios_nombres):
-    codigo_usuario = int(input("Ingrese el codigo del usuario a modificar: "))
+    while True:
+        try:
+            codigo_usuario = int(input("Ingrese el codigo del usuario a modificar: "))
+            break
+        except ValueError:
+            print("Ingrese un numero valido")
+    
     if codigo_usuario in usuarios_codigos:
         nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+        while not nuevo_nombre.isalpha():
+            print("Solo se pueden ingresar letras")
+            nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
         indice = usuarios_codigos.index(codigo_usuario)
         usuarios_nombres[indice] = nuevo_nombre
         print(f"Usuario con codigo {codigo_usuario} modificado a {nuevo_nombre}")
@@ -29,7 +41,12 @@ def modificar_usuario(usuarios_codigos, usuarios_nombres):
 
 
 def eliminar_usuario(usuarios_codigos, usuarios_nombres):
-    codigo_usuario = int(input("Ingrese el codigo del usuario a eliminar: "))
+    while True:
+        try:
+            codigo_usuario = int(input("Ingrese el codigo del usuario a eliminar: "))
+            break
+        except ValueError:
+            print("Ingrese un numero valido")
     if codigo_usuario in usuarios_codigos:
         indice = usuarios_codigos.index(codigo_usuario)
         usuarios_codigos.pop(indice)
@@ -45,31 +62,34 @@ def añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_prec
     num_valido = False
     while not num_valido:
         codigo_libro = input("Ingrese el codigo del libro: ")
-        if validaciones.es_entero(codigo_libro):
+        if not codigo_libro.isalpha() and validaciones.es_entero(codigo_libro):
             codigo_libro = int(codigo_libro)
             num_valido = True
         else:
             print("El codigo ingresado es incorrecto, intente nuevamente.")
 
     nombre_libro = input("Ingrese el nombre del libro: ")
+    while validaciones.cadena_vacia(nombre_libro):
+        print("Debe ingresar un nombre")
+        nombre_libro = input("Ingrese el nombre del libro: ")
 
     cantidad_valida = False
     while not cantidad_valida:
-        cantidad = input("Ingrese la cantidad de libros: ")
-        if validaciones.es_entero(cantidad):
-            cantidad = int(cantidad)
+        cantidad_libro = input("Ingrese la cantidad de libros: ")
+        if not cantidad_libro.isalpha() and validaciones.es_entero(cantidad_libro):
+            cantidad_libro = int(cantidad_libro)
             cantidad_valida = True
         else:
-            print("Cantidad no valida, ingrese un número entero positivo.")
+            print("La cantidad ingresada es incorrecta, intente nuevamente.")
 
     precio_valido = False
     while not precio_valido:
-        precio = input("Ingrese el precio del libro: ")
-        if validaciones.es_entero(precio):
-            precio = int(precio)
+        precio_libro = input("Ingrese el precio del libro: ")
+        if not precio_libro.isalpha() and validaciones.es_entero(precio_libro):
+            precio_libro = int(precio_libro)
             precio_valido = True
         else:
-            print("Precio no valido, ingrese un número entero positivo.")
+            print("El precio ingresado es incorrecto, intente nuevamente.")
 
     if codigo_libro in libros_codigos:
         print(f"Libro con codigo {codigo_libro} ya existe.")
@@ -77,18 +97,45 @@ def añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_prec
 
     libros_codigos.append(codigo_libro)
     libros_nombres.append(nombre_libro)
-    libros_cantidades.append(cantidad)
-    libros_precios.append(precio)
+    libros_cantidades.append(cantidad_libro)
+    libros_precios.append(precio_libro)
     print(f"Libro {nombre_libro} añadido.")
 
 
 def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
-    codigo_libro = int(input("Ingrese el codigo del libro a modificar: "))
+    while True:
+        try:
+            codigo_libro = int(input("Ingrese el codigo del libro a modificar: "))
+            break
+        except ValueError:
+            print("Ingrese un numero valido")
+            
     if codigo_libro in libros_codigos:
         indice = libros_codigos.index(codigo_libro)
+        
         nuevo_nombre = input("Ingrese el nuevo nombre del libro: ")
-        nueva_cantidad = int(input("Ingrese la nueva cantidad de libros: "))
-        nuevo_precio = int(input("Ingrese el nuevo precio del libro: "))
+        while validaciones.cadena_vacia(nuevo_nombre):
+            print("Debe ingresar un nombre")
+            nuevo_nombre = input("Ingrese el nuevo nombre del libro: ")
+        
+        cantidad_valida = False
+        while not cantidad_valida:
+            nueva_cantidad = input("Ingrese la nueva cantidad de libros: ")
+            if not nueva_cantidad.isalpha() and validaciones.es_entero(nueva_cantidad):
+                nueva_cantidad = int(nueva_cantidad)
+                cantidad_valida = True
+            else:
+                print("La cantidad ingresada es incorrecta, intente nuevamente.")
+            
+        precio_valido = False
+        while not precio_valido:
+            nuevo_precio = input("Ingrese el nuevo precio del libro: ")
+            if not nuevo_precio.isalpha() and validaciones.es_entero(nuevo_precio):
+                nuevo_precio = int(nuevo_precio)
+                precio_valido = True
+            else:
+                print("El precio ingesado es incorrecto, intente nuevamente.")
+                
         libros_nombres[indice] = nuevo_nombre
         libros_cantidades[indice] = nueva_cantidad
         libros_precios[indice] = nuevo_precio
@@ -98,7 +145,13 @@ def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pr
 
 
 def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
-    codigo_libro = int(input("Ingrese el codigo del libro a eliminar: "))
+    while True:
+        try:
+            codigo_libro = int(input("Ingrese el codigo del libro a eliminar: "))
+            break
+        except ValueError:
+            print("Ingrese un numero valido")
+            
     if codigo_libro in libros_codigos:
         indice = libros_codigos.index(codigo_libro)
         libros_codigos.pop(indice)
@@ -110,15 +163,12 @@ def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pre
         print(f"Libro con codigo {codigo_libro} no encontrado.")
 
 
-def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
-    matriz_libros = []
-    for i in range(len(libros_codigos)):
-        fila = [libros_codigos[i], libros_cantidades[i], libros_precios[i]]
-        matriz_libros.append(fila)
+# def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
+    # Imprimir archivo con nombre de libro, precio...
 
-    print("\n--- Matriz de Libros ---")
-    for fila in matriz_libros:
-        print(fila)
+
+# def reservar_libros(libros_codigos_cantidades):
+    
         
         
 #Funciones para archivos
@@ -172,7 +222,7 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
-        reservar_libros()
+        reservar_libros(libros_codigos_cantidades)
     elif opcion == 10:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         print("Programa finalizado")
