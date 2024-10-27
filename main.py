@@ -163,12 +163,35 @@ def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pre
         print(f"Libro con codigo {codigo_libro} no encontrado.")
 
 
-# def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
-    # Imprimir archivo con nombre de libro, precio...
-
-
-# def reservar_libros(libros_codigos_cantidades):
+def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
+    diccionario_libros={}
     
+    for i in range(len(libros_codigos)):
+        diccionario_libros[libros_codigos[i]]=[libros_cantidades[i],libros_precios[i]]
+        
+    print("Código, Cantidad, Precio","\n")
+    for codigo,(cantidad, precio) in diccionario_libros.items():
+        print(codigo,cantidad,precio)
+    return diccionario_libros
+
+
+def reservar_libros(libros_codigos,libros_cantidades,libros_nombres):
+    #datos diccionario reservas: codigo usuario, codigo libro, precio libro
+    codusuarios_reservados=[]
+    codlibros_reservados=[]
+    codus=int(input("Ingrese el codigo de usuario"))
+    codlib=int(input("Ingrese el codigo de libro que desee reservar: "))
+    for i in range(len(libros_codigos)):
+        if libros_codigos[i]==codlib:
+            if libros_cantidades[i]>0:
+                libros_cantidades[i]-=1
+                codusuarios_reservados.append(codus)
+                codlibros_reservados.append(codlib)
+            else:
+                print(f"Todos los libros código: {codlib}, nombre: {libros_nombres[i]} se encuentran reservados")
+        else:
+            print("No existe el libro código {codlib}")
+    return (codusuarios_reservados,codlibros_reservados)
         
         
 #Funciones para archivos
@@ -222,7 +245,7 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
-        reservar_libros(libros_codigos_cantidades)
+        reservar_libros(libros_codigos,libros_cantidades,libros_nombres)
     elif opcion == 10:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         print("Programa finalizado")
