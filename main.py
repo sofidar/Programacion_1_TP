@@ -175,28 +175,97 @@ def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
     return diccionario_libros
 
 
-def reservar_libros(libros_codigos,libros_cantidades,libros_nombres):
-    #datos diccionario reservas: codigo usuario, codigo libro, precio libro
-    codusuarios_reservados=[]
-    codlibros_reservados=[]
-    codus=int(input("Ingrese el codigo de usuario"))
-    codlib=int(input("Ingrese el codigo de libro que desee reservar: "))
-    for i in range(len(libros_codigos)):
-        if libros_codigos[i]==codlib:
-            if libros_cantidades[i]>0:
-                libros_cantidades[i]-=1
-                codusuarios_reservados.append(codus)
-                codlibros_reservados.append(codlib)
-            else:
-                print(f"Todos los libros código: {codlib}, nombre: {libros_nombres[i]} se encuentran reservados")
+def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados):
+    
+    # Excepción entero positivo
+    num_valido = False
+    while not num_valido:
+        codus=input("Ingrese el codigo de usuario")
+        if not codus.isalpha() and validaciones.es_entero(codus):
+            codus = int(codus)
+            num_valido = True
         else:
-            print("No existe el libro código {codlib}")
-    return (codusuarios_reservados,codlibros_reservados)
-        
-        
+            print("El codigo ingresado es incorrecto, intente nuevamente.")
+            
+    # Validación existencia codigo      
+    for i in range (len(usuarios_codigos)):
+        if codus == usuarios_codigos[i]:
+            
+            # Excepción entero positivo
+            num_valido = False
+            while not num_valido:
+                codlib=input("Ingrese el codigo de libro que desee reservar: ")
+                if not codlib.isalpha() and validaciones.es_entero(codlib):
+                    codlib = int(codlib)
+                    num_valido = True
+                else:
+                    print("El codigo ingresado es incorrecto, intente nuevamente.")
+                
+            for i in range(len(libros_codigos)):
+                if libros_codigos[i] == codlib:
+                    if libros_cantidades[i] > 0:
+                        libros_cantidades[i] -= 1
+                        codusuarios_reservados.append(codus)
+                        codlibros_reservados.append(codlib)
+                        precioslibros_reservados.append(libros_precios[i])
+                    else:
+                        print(f"Todos los libros código: {codlib}, nombre: {libros_nombres[i]} se encuentran reservados")
+                else:
+                    print(f"No existe el libro código: {codlib}")
+            
+    return codusuarios_reservados, codlibros_reservados, precioslibros_reservados
+
+def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas):
+    
+    # Excepción entero positivo
+    num_valido = False
+    while not num_valido:
+        codusuario=input("Ingrese el codigo de usuario")
+        if not codusuario.isalpha() and validaciones.es_entero(codusuario):
+            codusuario = int(codusuario)
+            num_valido = True
+        else:
+            print("El codigo ingresado es incorrecto, intente nuevamente.")
+            
+    # Validación existencia codigo      
+    for i in range (len(codusuarios_reservados)):
+        if codusuario == codusuarios_reservados[i]:
+    
+    # Excepción entero positivo
+            num_valido = False
+            while not num_valido:
+                codlib=input("Ingrese el codigo de libro que desee reservar: ")
+                if not codlib.isalpha() and validaciones.es_entero(codlib):
+                    codlib = int(codlib)
+                    num_valido = True
+                else:
+                    print("El codigo ingresado es incorrecto, intente nuevamente.")
+    
+    for i in range(len(codusuarios_reservados)):
+        if codusuarios_reservados[i] == codusuario:
+            
+            tiempodevolucion = input("¿Fue el libro devuelto a tiempo? s/n: ")
+            while not tiempodevolucion.isalpha():
+                print("Solo se pueden ingresar letras")
+                tiempodevolucion = input("¿Fue el libro devuelto a tiempo? s/n: ")
+            
+            if tiempodevolucion == n:
+                for j in range(len(usuarioscondeudas)):
+                    if usuarioscondeudas[j]==codusuario:
+                        deudas[j]+=(precioslibros_reservados[i]*0.50)
+                usuarioscondeudas.append(codusuarios_reservados[i])
+                deudas.append(precioslibros_reservados[i]*0.50)
+            codusuarios_reservados.pop(i)
+            codlibros_reservados.pop(i)
+            precioslibros_reservados.pop(i)
+            libros_cantidades[i]+=1
+            
+    return usuarioscondeudas, deudas
+                
 #Funciones para archivos
 
 def generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios):
+    print(libros_codigos, libros_cantidades, libros_precios)
     try:
         archivo_libros = open("libros.csv", mode='wt')
     except IOError:
@@ -208,6 +277,17 @@ def generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios):
     
     return
 
+def generar_archivo_reservas(codusuarios_reservados, codlibros_reservados):
+    try:
+        archivo_libros_reservados = open("reservas.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(codusuarios_reservados)):
+            archivo_libros_reservados.write(str(codusuarios_reservados[elemento])+";"+str(codlibros_reservados[elemento])+"\n")
+        archivo_libros_reservados.close()
+    
+    return
 
 # Menú
 
@@ -222,10 +302,11 @@ def mostrar_menu():
     print("7. Ver usuarios")
     print("8. Ver libros")
     print("9. Hacer una reserva")
-    print("10. Salir")
+    print("10. Devolver un libro")
+    print("11. Salir")
 
 
-def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios):
+def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas):
     if opcion == 1:
         añadir_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 2:
@@ -245,10 +326,12 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
-        reservar_libros(libros_codigos,libros_cantidades,libros_nombres)
+        codusuarios_reservados, codlibros_reservados, precioslibros_reservados = reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados)
     elif opcion == 10:
+        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas)
+    elif opcion == 11:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
-        print("Programa finalizado")
+        generar_archivo_reservas(codusuarios_reservados, codlibros_reservados)
         return False  # Indica que el programa debe terminar
     return True  # Indica que el bucle debe continuar
 
@@ -262,13 +345,18 @@ def main():
     libros_nombres = []
     libros_cantidades = []
     libros_precios = []
+    codusuarios_reservados=[]
+    codlibros_reservados=[]
+    precioslibros_reservados=[]
+    usuarioscondeudas=[]
+    deudas=[]
 
     continuar = True
     while continuar:
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
         if validaciones.opcion_valida_menu(opcion):
-            continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios)
+            continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas)
         else:
             print("Entrada no valida, por favor ingrese un numero entero del 1 al 10.")
 
