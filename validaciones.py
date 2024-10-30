@@ -1,6 +1,3 @@
-def es_entero(numero):
-    return numero.isdigit() and int(numero) > 0
-
 def opcion_valida_menu(opcion):
     return opcion.isdigit() and 1 <= int(opcion) <= 11
 
