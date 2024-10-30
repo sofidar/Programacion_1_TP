@@ -130,17 +130,16 @@ def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pre
 
 
 def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
-    diccionario_libros={}
+    diccionario = {}
+    diccionario_anidado = {}
+    for cantidad, precio in zip(libros_cantidades, libros_precios):
+        diccionario[cantidad] = precio
+    for codigo in libros_codigos:
+        diccionario_anidado[codigo] = diccionario
+    print(diccionario_anidado)
     
-    for i in range(len(libros_codigos)):
-        diccionario_libros[libros_codigos[i]]=[libros_cantidades[i],libros_precios[i]]
-        
-    print("Código, Cantidad, Precio","\n")
-    for codigo,(cantidad, precio) in diccionario_libros.items():
-        print(codigo,"        ",cantidad,"         ",precio)
-    return diccionario_libros
-
-
+    return
+    
 def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo):
     
     print("Ingrese el codigo del usuario que hace la reserva: ")
@@ -169,8 +168,9 @@ def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_pr
     else:
         print(f"El libro con código {codigo_libro} no existe en el inventario.")
     cantidad_reservas[subindice_libro] += 1
-    print(codusuarios_reservados, codlibros_reservados, precioslibros_reservados)      
-    return codusuarios_reservados, codlibros_reservados, precioslibros_reservados
+    print(codusuarios_reservados, codlibros_reservados, precioslibros_reservados)
+    
+    return
 
 def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas, usuarios_a_tiempo):
     print("Ingrese el codigo del usuario que hace la devolución: ")
@@ -225,7 +225,7 @@ def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantida
             break
         i += 1
     
-    return usuarioscondeudas, deudas
+    return
                 
 #Funciones para archivos
 
@@ -353,9 +353,9 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
-        codusuarios_reservados, codlibros_reservados, precioslibros_reservados = reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo)
+        reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo)
     elif opcion == 10:
-        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas,usuarios_a_tiempo)
+        devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas,usuarios_a_tiempo)
     elif opcion == 11:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         generar_archivo_reservas(codusuarios_reservados, codlibros_reservados)
