@@ -21,12 +21,8 @@ def añadir_usuario(usuarios_codigos, usuarios_nombres):
 
 
 def modificar_usuario(usuarios_codigos, usuarios_nombres):
-    while True:
-        try:
-            codigo_usuario = int(input("Ingrese el codigo del usuario a modificar: "))
-            break
-        except ValueError:
-            print("Ingrese un numero valido")
+    print("Ingrese el codigo del usuario a modificar: ")
+    codigo_usuario = validaciones.es_natural()
     
     if codigo_usuario in usuarios_codigos:
         nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
@@ -41,12 +37,9 @@ def modificar_usuario(usuarios_codigos, usuarios_nombres):
 
 
 def eliminar_usuario(usuarios_codigos, usuarios_nombres):
-    while True:
-        try:
-            codigo_usuario = int(input("Ingrese el codigo del usuario a eliminar: "))
-            break
-        except ValueError:
-            print("Ingrese un numero valido")
+    print("Ingrese el codigo del usuario a eliminar: ")
+    codigo_usuario = validaciones.es_natural()
+            
     if codigo_usuario in usuarios_codigos:
         indice = usuarios_codigos.index(codigo_usuario)
         usuarios_codigos.pop(indice)
@@ -58,57 +51,40 @@ def eliminar_usuario(usuarios_codigos, usuarios_nombres):
 
 # Funciones para libros
 
-def añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
-    num_valido = False
-    while not num_valido:
-        codigo_libro = input("Ingrese el codigo del libro: ")
-        if not codigo_libro.isalpha() and validaciones.es_entero(codigo_libro):
-            codigo_libro = int(codigo_libro)
-            num_valido = True
-        else:
-            print("El codigo ingresado es incorrecto, intente nuevamente.")
+def añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios, cantidad_reservas):
+    print("Ingrese el codigo del libro: ")
+    codigo_libro = validaciones.es_natural()
 
     nombre_libro = input("Ingrese el nombre del libro: ")
     while validaciones.cadena_vacia(nombre_libro):
         print("Debe ingresar un nombre")
         nombre_libro = input("Ingrese el nombre del libro: ")
 
-    cantidad_valida = False
-    while not cantidad_valida:
-        cantidad_libro = input("Ingrese la cantidad de libros: ")
-        if not cantidad_libro.isalpha() and validaciones.es_entero(cantidad_libro):
-            cantidad_libro = int(cantidad_libro)
-            cantidad_valida = True
-        else:
-            print("La cantidad ingresada es incorrecta, intente nuevamente.")
+    print("Ingrese el stock del libro: ")
+    cantidad_libro = validaciones.es_natural()
 
     precio_valido = False
     while not precio_valido:
         precio_libro = input("Ingrese el precio del libro: ")
-        if not precio_libro.isalpha() and validaciones.es_entero(precio_libro):
-            precio_libro = int(precio_libro)
+        if not precio_libro.isalpha():
             precio_valido = True
         else:
             print("El precio ingresado es incorrecto, intente nuevamente.")
 
     if codigo_libro in libros_codigos:
         print(f"Libro con codigo {codigo_libro} ya existe.")
-        return
-
-    libros_codigos.append(codigo_libro)
-    libros_nombres.append(nombre_libro)
-    libros_cantidades.append(cantidad_libro)
-    libros_precios.append(precio_libro)
-    print(f"Libro {nombre_libro} añadido.")
+    else:
+        libros_codigos.append(codigo_libro)
+        libros_nombres.append(nombre_libro)
+        libros_cantidades.append(cantidad_libro)
+        libros_precios.append(precio_libro)
+        cantidad_reservas.append(0)
+        print(f"Libro {nombre_libro} añadido.")
 
 
 def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
-    while True:
-        try:
-            codigo_libro = int(input("Ingrese el codigo del libro a modificar: "))
-            break
-        except ValueError:
-            print("Ingrese un numero valido")
+    print("Ingrese el codigo del libro a modificar: ")
+    codigo_libro = validaciones.es_natural()
             
     if codigo_libro in libros_codigos:
         indice = libros_codigos.index(codigo_libro)
@@ -118,23 +94,16 @@ def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pr
             print("Debe ingresar un nombre")
             nuevo_nombre = input("Ingrese el nuevo nombre del libro: ")
         
-        cantidad_valida = False
-        while not cantidad_valida:
-            nueva_cantidad = input("Ingrese la nueva cantidad de libros: ")
-            if not nueva_cantidad.isalpha() and validaciones.es_entero(nueva_cantidad):
-                nueva_cantidad = int(nueva_cantidad)
-                cantidad_valida = True
-            else:
-                print("La cantidad ingresada es incorrecta, intente nuevamente.")
+        print("Ingrese la nueva cantidad de libros: ")
+        nueva_cantidad = validaciones.es_natural()
             
         precio_valido = False
         while not precio_valido:
             nuevo_precio = input("Ingrese el nuevo precio del libro: ")
-            if not nuevo_precio.isalpha() and validaciones.es_entero(nuevo_precio):
-                nuevo_precio = int(nuevo_precio)
+            if not nuevo_precio.isalpha():
                 precio_valido = True
             else:
-                print("El precio ingesado es incorrecto, intente nuevamente.")
+                print("El precio ingresado es incorrecto, intente nuevamente.")
                 
         libros_nombres[indice] = nuevo_nombre
         libros_cantidades[indice] = nueva_cantidad
@@ -145,12 +114,8 @@ def modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pr
 
 
 def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios):
-    while True:
-        try:
-            codigo_libro = int(input("Ingrese el codigo del libro a eliminar: "))
-            break
-        except ValueError:
-            print("Ingrese un numero valido")
+    print("Ingrese el codigo del libro a eliminar: ")
+    codigo_libro = validaciones.es_natural()
             
     if codigo_libro in libros_codigos:
         indice = libros_codigos.index(codigo_libro)
@@ -158,6 +123,7 @@ def eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_pre
         libros_nombres.pop(indice)
         libros_cantidades.pop(indice)
         libros_precios.pop(indice)
+        cantidad_reservas.pop(indice)
         print(f"Libro con codigo {codigo_libro} eliminado.")
     else:
         print(f"Libro con codigo {codigo_libro} no encontrado.")
@@ -171,95 +137,103 @@ def mostrar_libros(libros_codigos, libros_cantidades, libros_precios):
         
     print("Código, Cantidad, Precio","\n")
     for codigo,(cantidad, precio) in diccionario_libros.items():
-        print(codigo,cantidad,precio)
+        print(codigo,"        ",cantidad,"         ",precio)
     return diccionario_libros
 
 
-def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados):
+def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo):
     
-    # Excepción entero positivo
-    num_valido = False
-    while not num_valido:
-        codus=input("Ingrese el codigo de usuario")
-        if not codus.isalpha() and validaciones.es_entero(codus):
-            codus = int(codus)
-            num_valido = True
+    print("Ingrese el codigo del usuario que hace la reserva: ")
+    codigo_usuario = validaciones.es_natural()
+    
+    if codigo_usuario not in usuarios_codigos:
+        print(f"El cliente con código {codigo_usuario} no existe.")
+        
+        return codusuarios_reservados, codlibros_reservados, precioslibros_reservados
+            
+    print("Ingrese el codigo del libro que se desee reservar: ")
+    codigo_libro = validaciones.es_natural()
+            
+    if codigo_libro in libros_codigos:
+        try:
+            subindice_libro = libros_codigos.index(codigo_libro)
+        except ValueError:
+            print("El codigo de usuario no existe")
+        if libros_cantidades[subindice_libro] > 0:
+            libros_cantidades[subindice_libro] -= 1
+            codusuarios_reservados.append(codigo_usuario)
+            codlibros_reservados.append(codigo_libro)
+            precioslibros_reservados.append(libros_precios[subindice_libro])
         else:
-            print("El codigo ingresado es incorrecto, intente nuevamente.")
-            
-    # Validación existencia codigo      
-    for i in range (len(usuarios_codigos)):
-        if codus == usuarios_codigos[i]:
-            
-            # Excepción entero positivo
-            num_valido = False
-            while not num_valido:
-                codlib=input("Ingrese el codigo de libro que desee reservar: ")
-                if not codlib.isalpha() and validaciones.es_entero(codlib):
-                    codlib = int(codlib)
-                    num_valido = True
-                else:
-                    print("El codigo ingresado es incorrecto, intente nuevamente.")
-                
-            for i in range(len(libros_codigos)):
-                if libros_codigos[i] == codlib:
-                    if libros_cantidades[i] > 0:
-                        libros_cantidades[i] -= 1
-                        codusuarios_reservados.append(codus)
-                        codlibros_reservados.append(codlib)
-                        precioslibros_reservados.append(libros_precios[i])
-                    else:
-                        print(f"Todos los libros código: {codlib}, nombre: {libros_nombres[i]} se encuentran reservados")
-                else:
-                    print(f"No existe el libro código: {codlib}")
-            
+            print(f"Todos los libros código: {codigo_libro}, nombre: {libros_nombres[subindice_libro]} se encuentran reservados")
+    else:
+        print(f"El libro con código {codigo_libro} no existe en el inventario.")
+    cantidad_reservas[subindice_libro] += 1
+    print(codusuarios_reservados, codlibros_reservados, precioslibros_reservados)      
     return codusuarios_reservados, codlibros_reservados, precioslibros_reservados
 
-def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas):
+def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas):
+    print("Ingrese el codigo del usuario que hace la devolución: ")
+    codigo_usuario = validaciones.es_natural()
+
+    if codigo_usuario not in codusuarios_reservados:
+        print(f"El cliente con código {codigo_usuario} no tiene reservas.")
+        return usuarioscondeudas, deudas
     
-    # Excepción entero positivo
-    num_valido = False
-    while not num_valido:
-        codusuario=input("Ingrese el codigo de usuario")
-        if not codusuario.isalpha() and validaciones.es_entero(codusuario):
-            codusuario = int(codusuario)
-            num_valido = True
-        else:
-            print("El codigo ingresado es incorrecto, intente nuevamente.")
+    print("Ingrese el codigo del libro que se desee devolver: ")
+    codigo_libro = validaciones.es_natural()
+    
+    # Usar while con índice en lugar de for para evitar modificar listas mientras iteramos
+    i = 0
+    while i < len(codusuarios_reservados):
+        if codusuarios_reservados[i] == codigo_usuario and codlibros_reservados[i] == codigo_libro:
+            # Pregunta si el libro fue devuelto a tiempo
+            tiempodevolucion = input("¿Fue el libro devuelto a tiempo? (s/n): ").lower()
+            while tiempodevolucion not in ['s', 'n']:
+                print("Por favor, ingrese 's' para sí o 'n' para no.")
+                tiempodevolucion = input("¿Fue el libro devuelto a tiempo? (s/n): ").lower()
             
-    # Validación existencia codigo      
-    for i in range (len(codusuarios_reservados)):
-        if codusuario == codusuarios_reservados[i]:
-    
-    # Excepción entero positivo
-            num_valido = False
-            while not num_valido:
-                codlib=input("Ingrese el codigo de libro que desee reservar: ")
-                if not codlib.isalpha() and validaciones.es_entero(codlib):
-                    codlib = int(codlib)
-                    num_valido = True
+            # Si no fue devuelto a tiempo, agrega deuda
+            if tiempodevolucion == 'n':
+                auxiliar=int(precioslibros_reservados[i])
+                multa = auxiliar * 0.50
+                if codigo_usuario in usuarioscondeudas:
+                    idx = usuarioscondeudas.index(codigo_usuario)
+                    deudas[idx] += multa
+                    cantidad_deudas[idx] += 1
                 else:
-                    print("El codigo ingresado es incorrecto, intente nuevamente.")
-    
-    for i in range(len(codusuarios_reservados)):
-        if codusuarios_reservados[i] == codusuario:
-            
-            tiempodevolucion = input("¿Fue el libro devuelto a tiempo? s/n: ")
-            while not tiempodevolucion.isalpha():
-                print("Solo se pueden ingresar letras")
-                tiempodevolucion = input("¿Fue el libro devuelto a tiempo? s/n: ")
-            
-            if tiempodevolucion == n:
-                for j in range(len(usuarioscondeudas)):
-                    if usuarioscondeudas[j]==codusuario:
-                        deudas[j]+=(precioslibros_reservados[i]*0.50)
-                usuarioscondeudas.append(codusuarios_reservados[i])
-                deudas.append(precioslibros_reservados[i]*0.50)
+                    usuarioscondeudas.append(codigo_usuario)
+                    deudas.append(multa)
+                    cantidad_deudas.append(1)
+                usuarios_deudas.append(codigo_usuario)
+                libros_deudas.append(codigo_libro)
+                print(f"Se ha añadido una multa de {multa} para el usuario {codigo_usuario}")
+            else:
+                if codigo_usuario in usuarios_a_tiempo:
+                    idx2 = usuarios_a_tiempo.index(codigo_usuario)
+                    cantidad_a_tiempo[idx2] += 1
+                else:
+                    usuarios_a_tiempo.append(codigo_usuario)
+                    cantidad_a_tiempo.append(1)
+            # Devolver libro al inventario y eliminar reserva
+            subindice_libro = codlibros_reservados.index(codigo_libro)
+            libros_cantidades[subindice_libro] += 1
             codusuarios_reservados.pop(i)
             codlibros_reservados.pop(i)
             precioslibros_reservados.pop(i)
-            libros_cantidades[i]+=1
-            
+            print(f"Libro con código {codigo_libro} devuelto por usuario {codigo_usuario}.")
+            break
+        i += 1
+
+    print("Estado actual de reservas:")
+    print("Usuarios reservados:", codusuarios_reservados)
+    print("Libros reservados:", codlibros_reservados)
+    print("Precios reservados:", precioslibros_reservados)
+    print("Usuarios con deudas:", usuarioscondeudas)
+    print("Deudas:", deudas)
+    print("Cantidad de Deudas: ",cantidad_deudas)
+    print("Cantidad Devuelta a Tiempo: ",cantidad_a_tiempo)
+    
     return usuarioscondeudas, deudas
                 
 #Funciones para archivos
@@ -277,6 +251,19 @@ def generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios):
     
     return
 
+def generar_archivo_usuarios(usuarios_codigos, usuarios_nombres):
+    print(usuarios_codigos, usuarios_nombres)
+    try:
+        archivo_usuarios = open("usuarios.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(usuarios_codigos)):
+            archivo_usuarios.write(str(usuarios_codigos[elemento])+";"+str(usuarios_nombres[elemento])+"\n")
+        archivo_usuarios.close()
+    
+    return
+
 def generar_archivo_reservas(codusuarios_reservados, codlibros_reservados):
     try:
         archivo_libros_reservados = open("reservas.csv", mode='wt')
@@ -288,6 +275,55 @@ def generar_archivo_reservas(codusuarios_reservados, codlibros_reservados):
         archivo_libros_reservados.close()
     
     return
+
+def generar_archivo_historial_reservas(libros_codigos, libros_nombres, cantidad_reservas):
+    try:
+        archivo_historial_reservas = open("historialreservas.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(libros_codigos)):
+            archivo_historial_reservas.write(str(libros_codigos[elemento])+";"+str(libros_nombres[elemento])+";"+str(cantidad_reservas[elemento])+"\n")
+        archivo_historial_reservas.close()
+    
+    return
+
+def generar_archivo_historial_deudas(usuarios_deudas, deudas, cantidad_deudas):
+    try:
+        archivo_historial_deudas = open("historialdeudas.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(usuarios_deudas)):
+            archivo_historial_deudas.write(str(usuarios_deudas[elemento])+";"+str(deudas[elemento])+";"+str(cantidad_deudas[elemento])+"\n")
+        archivo_historial_deudas.close()
+    
+    return
+
+def generar_archivo_devoluciones_tarde(libros_deudas, cantidad_deudas):
+    try:
+        archivo_devoluciones_tarde = open("devolucionestarde.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(libros_deudas)):
+            archivo_devoluciones_tarde.write(str(libros_deudas[elemento])+";"+str(cantidad_deudas[elemento])+"\n")
+        archivo_devoluciones_tarde.close()
+    
+    return 
+
+def generar_archivo_devoluciones_a_tiempo(usuarios_a_tiempo, cantidad_a_tiempo):
+    try:
+        archivo_devoluciones_a_tiempo = open("devolucionesatiempo.csv", mode='wt')
+    except IOError:
+        print("No se pudo crear el archivo")
+    else:
+        for elemento in range (len(usuarios_a_tiempo)):
+            archivo_devoluciones_a_tiempo.write(str(usuarios_a_tiempo[elemento])+";"+str(cantidad_a_tiempo[elemento])+"\n")
+        archivo_devoluciones_a_tiempo.close()
+    
+    return
+
 
 # Menú
 
@@ -306,7 +342,7 @@ def mostrar_menu():
     print("11. Salir")
 
 
-def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas):
+def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_reservas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas, usuarios_a_tiempo):
     if opcion == 1:
         añadir_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 2:
@@ -314,24 +350,29 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 3:
         eliminar_usuario(usuarios_codigos, usuarios_nombres)
     elif opcion == 4:
-        añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
+        añadir_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios, cantidad_reservas)
     elif opcion == 5:
         modificar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
     elif opcion == 6:
         eliminar_libro(libros_codigos, libros_nombres, libros_cantidades, libros_precios)
     elif opcion == 7:
         print("\nUsuarios:")
-        for i in range(len(usuarios_codigos)):
-            print(f"Codigo: {usuarios_codigos[i]}, Nombre: {usuarios_nombres[i]}")
+        for codigo, nombre in zip(usuarios_codigos, usuarios_nombres):
+            print(f"Codigo: {codigo}, Nombre: {nombre}")
     elif opcion == 8:
         mostrar_libros(libros_codigos, libros_cantidades, libros_precios)
     elif opcion == 9:
-        codusuarios_reservados, codlibros_reservados, precioslibros_reservados = reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados)
+        codusuarios_reservados, codlibros_reservados, precioslibros_reservados = reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo)
     elif opcion == 10:
-        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas)
+        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas)
     elif opcion == 11:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         generar_archivo_reservas(codusuarios_reservados, codlibros_reservados)
+        generar_archivo_historial_reservas(libros_codigos, libros_nombres, cantidad_reservas)
+        generar_archivo_historial_deudas(usuarios_deudas, deudas, cantidad_deudas)
+        generar_archivo_devoluciones_tarde(libros_deudas, cantidad_deudas)
+        generar_archivo_usuarios(usuarios_codigos, usuarios_nombres)
+        generar_archivo_devoluciones_a_tiempo(usuarios_a_tiempo, cantidad_a_tiempo)
         return False  # Indica que el programa debe terminar
     return True  # Indica que el bucle debe continuar
 
@@ -350,16 +391,23 @@ def main():
     precioslibros_reservados=[]
     usuarioscondeudas=[]
     deudas=[]
-
+    cantidad_reservas = []
+    cantidad_deudas = []
+    cantidad_a_tiempo = []
+    usuarios_deudas = []
+    libros_deudas = []
+    usuarios_a_tiempo = []
+    
     continuar = True
     while continuar:
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
         if validaciones.opcion_valida_menu(opcion):
-            continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas)
+            continuar = ejecutar_opcion(int(opcion), usuarios_codigos, usuarios_nombres, libros_codigos, libros_nombres, libros_cantidades, libros_precios, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_reservas, cantidad_deudas,cantidad_a_tiempo, usuarios_deudas, libros_deudas, usuarios_a_tiempo)
         else:
             print("Entrada no valida, por favor ingrese un numero entero del 1 al 10.")
 
 
 if __name__ == "__main__":
     main()
+
