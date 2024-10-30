@@ -172,7 +172,7 @@ def reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_pr
     print(codusuarios_reservados, codlibros_reservados, precioslibros_reservados)      
     return codusuarios_reservados, codlibros_reservados, precioslibros_reservados
 
-def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas):
+def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas, usuarios_a_tiempo):
     print("Ingrese el codigo del usuario que hace la devolución: ")
     codigo_usuario = validaciones.es_natural()
 
@@ -224,15 +224,6 @@ def devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantida
             print(f"Libro con código {codigo_libro} devuelto por usuario {codigo_usuario}.")
             break
         i += 1
-
-    print("Estado actual de reservas:")
-    print("Usuarios reservados:", codusuarios_reservados)
-    print("Libros reservados:", codlibros_reservados)
-    print("Precios reservados:", precioslibros_reservados)
-    print("Usuarios con deudas:", usuarioscondeudas)
-    print("Deudas:", deudas)
-    print("Cantidad de Deudas: ",cantidad_deudas)
-    print("Cantidad Devuelta a Tiempo: ",cantidad_a_tiempo)
     
     return usuarioscondeudas, deudas
                 
@@ -364,7 +355,7 @@ def ejecutar_opcion(opcion, usuarios_codigos, usuarios_nombres, libros_codigos, 
     elif opcion == 9:
         codusuarios_reservados, codlibros_reservados, precioslibros_reservados = reservar_libros(libros_codigos, libros_cantidades, libros_nombres, libros_precios, usuarios_codigos, codusuarios_reservados, codlibros_reservados, precioslibros_reservados, cantidad_reservas, usuarios_a_tiempo)
     elif opcion == 10:
-        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas)
+        usuarioscondeudas, deudas = devolver_libros(codusuarios_reservados, codlibros_reservados, libros_cantidades, precioslibros_reservados, usuarioscondeudas, deudas, cantidad_deudas, cantidad_a_tiempo, usuarios_deudas, libros_deudas,usuarios_a_tiempo)
     elif opcion == 11:
         generar_archivo_libros(libros_codigos, libros_cantidades, libros_precios)
         generar_archivo_reservas(codusuarios_reservados, codlibros_reservados)
@@ -410,4 +401,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
